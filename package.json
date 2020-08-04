@@ -1,0 +1,17 @@
+{
+  "name": "broswer",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.13.0",
+    "koa-router": "^9.1.0",
+    "puppeteer": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "nodemon ./main.js"
+  }
+}

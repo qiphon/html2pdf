@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const puppeteer = require('puppeteer')
+const path = require('path')
+const childProcess = require('child_process')
+
+let { argv } = process
+argv = argv.slice(2)
+if (argv.length >= 2) {
+    let url = ''
+    let output = './qiphon.pdf'
+    for (let i = 0; i < 4; i++) {
+        if (argv[i] === '-u' || argv[i] === 'url') {
+            url = argv[i + 1]
+            i += 2;
+        }
+        if (argv[i] === '-o' || argv[i] === 'output') {
+            output = argv[i + 1]
+            i += 2;
+        }
+    }
+    // console.log(url, "output", output)
+    if (url && output) {
+        genPdf(url, output)
+    }
+}
+
+async function genPdf(url, output) {
+    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+    const page = await browser.newPage();
+    await childProcess.exec(`rm -rf ${output}`)
+    try {
+        await page.goto(url, {
+            waitUntil: 'networkidle0'
+        })
+        await page.pdf({
+            path: output,
+            format: 'A4'
+        })
+        await browser.close();
+    } catch (err) {
+        console.log(err)
+        process.exit(-1)
+    }
+    process.exit(0)
+}
